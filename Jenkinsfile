@@ -23,7 +23,7 @@ pipeline {
                  script{
                         dir("terraform")
                         {
-                            git "https://github.com/easyawslearn/Terraform-Tutorial.git"
+                            git "https://github.com/AhmedMasoodpy123/terraform-ec2.git"
                         }
                     }
                 }
@@ -31,11 +31,11 @@ pipeline {
 
         stage('Plan') {
             steps {
-                sh 'pwd;cd terraform/aws-instance-first-script ; terraform init -input=false'
-                sh 'pwd;cd terraform/aws-instance-first-script ; terraform workspace new ${environment}'
-                sh 'pwd;cd terraform/aws-instance-first-script ; terraform workspace select ${environment}'
-                sh "pwd;cd terraform/aws-instance-first-script ;terraform plan -input=false -out tfplan "
-                sh 'pwd;cd terraform/aws-instance-first-script ;terraform show -no-color tfplan > tfplan.txt'
+                sh 'pwd;cd terraform/ec2-instance ; terraform init -input=false'
+                sh 'pwd;cd terraform/ec2-instance ; terraform workspace new ${environment}'
+                sh 'pwd;cd terraform/ec2-instance ; terraform workspace select ${environment}'
+                sh "pwd;cd terraform/ec2-instance ;terraform plan -input=false -out tfplan "
+                sh 'pwd;cd terraform/ec2-instance ;terraform show -no-color tfplan > tfplan.txt'
             }
         }
         stage('Approval') {
@@ -47,7 +47,7 @@ pipeline {
 
            steps {
                script {
-                    def plan = readFile 'terraform/aws-instance-first-script/tfplan.txt'
+                    def plan = readFile 'terraform/ec2-instance/tfplan.txt'
                     input message: "Do you want to apply the plan?",
                     parameters: [text(name: 'Plan', description: 'Please review the plan', defaultValue: plan)]
                }
@@ -56,7 +56,7 @@ pipeline {
 
         stage('Apply') {
             steps {
-                sh "pwd;cd terraform/aws-instance-first-script ; terraform apply -input=false tfplan"
+                sh "pwd;cd terraform/ec2-instance ; terraform apply -input=false tfplan"
             }
         }
     }
