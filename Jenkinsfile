@@ -56,7 +56,7 @@ pipeline {
 
         stage('Apply') {
             steps {
-                sh "pwd;cd terraform/ec2-instance ; terraform apply -input=false tfplan"
+                sh "terraform apply -input=false tfplan"
             }
         }
     }
