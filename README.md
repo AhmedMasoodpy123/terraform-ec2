@@ -1,0 +1,1 @@
+A terraform module used for creating an AWS EC2 Instance
