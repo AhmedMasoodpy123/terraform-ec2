@@ -31,11 +31,11 @@ pipeline {
 
         stage('Plan') {
             steps {
-                sh 'pwd;cd terraform/ec2-instance ; terraform init -input=false'
-                sh 'pwd;cd terraform/ec2-instance ; terraform workspace new ${environment}'
-                sh 'pwd;cd terraform/ec2-instance ; terraform workspace select ${environment}'
-                sh "pwd;cd terraform/ec2-instance ;terraform plan -input=false -out tfplan "
-                sh 'pwd;cd terraform/ec2-instance ;terraform show -no-color tfplan > tfplan.txt'
+                sh 'terraform init -input=false'
+                sh 'terraform workspace new ${environment}'
+                sh 'terraform workspace select ${environment}'
+                sh "terraform plan -input=false -out tfplan "
+                sh 'terraform show -no-color tfplan > tfplan.txt'
             }
         }
         stage('Approval') {
@@ -47,7 +47,7 @@ pipeline {
 
            steps {
                script {
-                    def plan = readFile 'terraform/ec2-instance/tfplan.txt'
+                    def plan = readFile 'tfplan.txt'
                     input message: "Do you want to apply the plan?",
                     parameters: [text(name: 'Plan', description: 'Please review the plan', defaultValue: plan)]
                }
