@@ -1,8 +1,7 @@
 pipeline {
 
     parameters {
-        string(name: 'environment', defaultValue: 'terraform', description: 'Workspace/environment file to use for deployment')
-        booleanParam(name: 'autoApprove', defaultValue: false, description: 'Automatically run apply after generating plan?')
+        string(name: 'environment', defaultValue: 'terraform', description: 'Workspace/environment file to use for deployment') 
 
     }
 
@@ -15,7 +14,7 @@ pipeline {
    agent  any
         options {
                 timestamps ()
-                ansiColor('xterm')
+                ansiColor('xterm') // Formatting so colourises the output of the whole pipeline
             }
     stages {
         stage('checkout') {
@@ -23,7 +22,7 @@ pipeline {
                  script{
                         dir("terraform")
                         {
-                            git "https://github.com/AhmedMasoodpy123/terraform-ec2.git"
+                            git "https://github.com/AhmedMasoodpy123/terraform-ec2.git" // links to the git repository in question
                         }
                     }
                 }
@@ -31,17 +30,17 @@ pipeline {
 
         stage('Plan') {
             steps {
-                sh 'terraform init -input=false'
-                //sh 'terraform workspace new ${environment}'
-                sh 'terraform workspace select ${environment}'
-                sh "terraform plan -input=false -out tfplan "
-                sh 'terraform show -no-color tfplan > tfplan.txt'
+                sh 'terraform init -input=false' // initialises terraform
+                sh 'terraform workspace new ${environment}' //creates a new workspace
+                sh 'terraform workspace select ${environment}' //selects newly created workspace
+                sh "terraform plan -input=false -out tfplan " //creates plan under name .tfplan
+                sh 'terraform show -no-color tfplan > tfplan.txt' //shows what is in our tfplan on jenkins
             }
         }
-        
+
         stage('Apply') {
             steps {
-                sh "terraform apply -input=false tfplan"
+                sh "terraform apply -input=false tfplan" //apply command
             }
         }
     }
