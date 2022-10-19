@@ -31,7 +31,7 @@ pipeline {
         stage('Plan') {
             steps {
                 sh 'terraform init -input=false' // initialises terraform
-                sh 'terraform workspace new ${environment}' //creates a new workspace
+              //  sh 'terraform workspace new ${environment}' //creates a new workspace
                 sh 'terraform workspace select ${environment}' //selects newly created workspace
                 sh "terraform plan -input=false -out tfplan " //creates plan under name .tfplan
                 sh 'terraform show -no-color tfplan > tfplan.txt' //shows what is in our tfplan on jenkins
